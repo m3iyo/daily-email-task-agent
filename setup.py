@@ -15,7 +15,7 @@ def main() -> int:
             "\n".join(
                 [
                     "OLLAMA_BASE_URL=http://localhost:11434",
-                    "OLLAMA_MODEL=qwen3.5:9b",
+                    "OLLAMA_MODEL=qwen2.5:14b",
                     "OLLAMA_TIMEOUT_SECONDS=120",
                     "GOOGLE_CREDENTIALS_FILE=credentials.json",
                     "GOOGLE_TOKEN_FILE=token.json",

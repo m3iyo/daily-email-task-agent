@@ -11,6 +11,17 @@ from pathlib import Path
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
+def check_python_version():
+    """Ensure the runtime is compatible with the pinned dependencies."""
+    current = sys.version_info[:3]
+    if current < (3, 11):
+        print(f"FAIL: Python 3.11+ required, found {sys.version.split()[0]}")
+        return False
+    if current >= (3, 14):
+        print(f"FAIL: Python 3.14+ is not supported by the pinned SQLAlchemy version, found {sys.version.split()[0]}")
+        return False
+    return True
+
 def test_gmail_connection():
     """Test Gmail API connection"""
     print("Testing Gmail API connection...")
@@ -92,6 +103,9 @@ def main():
     """Main test function"""
     print("Testing Google APIs for Email & Task Agent")
     print("=" * 50)
+
+    if not check_python_version():
+        return 1
     
     # Check if credentials file exists
     if not Path("credentials.json").exists():

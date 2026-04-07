@@ -1,6 +1,6 @@
 # Daily Email & Task Automation Agent (Ollama Mode)
 
-This project fetches Gmail emails, analyzes them with a local Ollama model (`qwen3.5:9b`), extracts actionable tasks, and syncs them to Google Tasks.
+This project fetches Gmail emails, analyzes them with a local Ollama model (`qwen3.5:9b` by default), extracts actionable tasks, and syncs them to Google Tasks.
 
 ## Core Flow
 
@@ -13,7 +13,8 @@ This project fetches Gmail emails, analyzes them with a local Ollama model (`qwe
 
 ## Requirements
 
-- Python 3.11 recommended
+- Python 3.11 or 3.12 recommended
+- Python 3.14 is not currently supported by the pinned SQLAlchemy version in this project
 - Ollama running locally
 - A pulled model, for example:
   - `ollama pull qwen3.5:9b`
@@ -55,6 +56,9 @@ Open `http://localhost:8000`.
 - `GET /summaries`
 - `POST /api/process-emails`
 - `POST /api/sync-tasks`
+- `POST /api/generate-summary`
+- `GET /api/emails/export`
+- `GET /api/summaries/export`
 - `GET /api/stats`
 - `GET /api/health`
 
@@ -63,3 +67,4 @@ Open `http://localhost:8000`.
 - Model/backend is controlled by `.env`:
   - `OLLAMA_BASE_URL`
   - `OLLAMA_MODEL`
+  - Structured output is enforced in `services/ollama_client.py` for more reliable JSON extraction

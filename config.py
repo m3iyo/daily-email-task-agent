@@ -1,12 +1,15 @@
-import os
+from pathlib import Path
 from typing import Optional
+from pydantic import field_validator
 from pydantic_settings import BaseSettings
+
+PROJECT_ROOT = Path(__file__).resolve().parent
 
 
 class Settings(BaseSettings):
     # Local Ollama Configuration
     ollama_base_url: str = "http://localhost:11434"
-    ollama_model: str = "qwen3.5:9b"
+    ollama_model: str = "qwen2.5:14b"
     ollama_timeout_seconds: int = 120
 
     # Google APIs Configuration
@@ -34,8 +37,21 @@ class Settings(BaseSettings):
     max_daily_processing: int = 100
     email_processing_schedule: str = "8:00"  # 8 AM daily
 
+    @field_validator("debug", "process_unread_only", "process_starred_emails", mode="before")
+    @classmethod
+    def parse_bool_like(cls, value):
+        if isinstance(value, bool):
+            return value
+
+        text = str(value).strip().lower()
+        if text in {"1", "true", "yes", "on", "debug", "development"}:
+            return True
+        if text in {"0", "false", "no", "off", "release", "prod", "production"}:
+            return False
+        raise ValueError(f"Invalid boolean value: {value}")
+
     model_config = {
-        "env_file": ".env",
+        "env_file": PROJECT_ROOT / ".env",
         "case_sensitive": False,
         "extra": "ignore"  # Ignore extra fields in .env
     }

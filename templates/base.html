@@ -109,9 +109,9 @@
                 <p class="text-gray-600 text-sm mb-4">Intelligent email processing and task management powered by AI</p>
                 <div class="flex justify-center space-x-6 text-sm text-gray-500">
                     <span>&copy; 2024 AI Email Agent</span>
-                    <span>•</span>
-                    <span>Built with ❤️ and AI</span>
-                    <span>•</span>
+                    <span>|</span>
+                    <span>Built with care and AI</span>
+                    <span>|</span>
                     <span>Version 1.0</span>
                 </div>
             </div>
@@ -180,61 +180,6 @@
             } else {
                 overlay.classList.add('hidden');
                 overlay.classList.remove('flex');
-            }
-        }
-        
-        // Enhanced API call functions with better UX
-        async function approveArticle(articleId) {
-            showLoading(true);
-            try {
-                await axios.post(`/api/articles/${articleId}/approve`);
-                showToast('Article approved successfully!', 'success');
-                setTimeout(() => location.reload(), 1000);
-            } catch (error) {
-                showToast('Error approving article: ' + (error.response?.data?.detail || error.message), 'error');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        async function rejectArticle(articleId) {
-            showLoading(true);
-            try {
-                await axios.post(`/api/articles/${articleId}/reject`);
-                showToast('Article rejected successfully!', 'success');
-                setTimeout(() => location.reload(), 1000);
-            } catch (error) {
-                showToast('Error rejecting article: ' + (error.response?.data?.detail || error.message), 'error');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        async function publishArticle(articleId, status = 'public') {
-            showLoading(true);
-            try {
-                await axios.post(`/api/articles/${articleId}/publish`, {
-                    publish_status: status
-                });
-                showToast('Publishing started! Check back in a few minutes.', 'info', 7000);
-                setTimeout(() => location.reload(), 2000);
-            } catch (error) {
-                showToast('Error publishing article: ' + (error.response?.data?.detail || error.message), 'error');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        async function triggerGeneration(topic = null) {
-            showLoading(true);
-            try {
-                const payload = topic ? { topic } : {};
-                await axios.post('/api/generate', payload);
-                showToast('Content generation triggered! Check back in a few minutes.', 'info', 7000);
-            } catch (error) {
-                showToast('Error triggering generation: ' + (error.response?.data?.detail || error.message), 'error');
-            } finally {
-                showLoading(false);
             }
         }
         

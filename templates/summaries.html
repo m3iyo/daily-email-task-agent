@@ -160,10 +160,10 @@
         showLoading(true);
         try {
             await axios.post('/api/generate-summary');
-            showToast('Summary generation started! ✨', 'info', 5000);
+            showToast('Summary generation started.', 'info', 5000);
             setTimeout(() => location.reload(), 2000);
         } catch (error) {
-            showToast('Summary generation feature coming soon! 📊', 'info');
+            showToast('Error generating summary: ' + (error.response?.data?.detail || error.message), 'error');
         } finally {
             showLoading(false);
         }
@@ -185,9 +185,9 @@
             link.remove();
             window.URL.revokeObjectURL(url);
             
-            showToast('Summaries exported successfully! 📁', 'success');
+            showToast('Summaries exported successfully.', 'success');
         } catch (error) {
-            showToast('Export feature coming soon! 📊', 'info');
+            showToast('Error exporting summaries: ' + (error.response?.data?.detail || error.message), 'error');
         } finally {
             showLoading(false);
         }

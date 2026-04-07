@@ -269,10 +269,10 @@
                             <label class="block text-sm font-bold text-gray-700 mb-2">Priority</label>
                             <select id="taskPriority" 
                                     class="form-input w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-0 transition-all">
-                                <option value="low">🟢 Low Priority</option>
-                                <option value="medium" selected>🟡 Medium Priority</option>
-                                <option value="high">🟠 High Priority</option>
-                                <option value="urgent">🔴 Urgent</option>
+                                <option value="low">Low Priority</option>
+                                <option value="medium" selected>Medium Priority</option>
+                                <option value="high">High Priority</option>
+                                <option value="urgent">Urgent</option>
                             </select>
                         </div>
                     </div>
@@ -299,7 +299,7 @@
         showLoading(true);
         try {
             await axios.post(`/api/tasks/${taskId}/complete`);
-            showToast('Task completed successfully! 🎉', 'success');
+            showToast('Task completed successfully.', 'success');
             setTimeout(() => location.reload(), 1000);
         } catch (error) {
             showToast('Error completing task: ' + (error.response?.data?.detail || error.message), 'error');
@@ -312,7 +312,7 @@
         showLoading(true);
         try {
             await axios.post('/api/sync-tasks');
-            showToast('Tasks synchronized with Google Tasks! ☁️', 'success');
+            showToast('Tasks synchronized with Google Tasks.', 'success');
             setTimeout(() => location.reload(), 1500);
         } catch (error) {
             showToast('Error syncing tasks: ' + (error.response?.data?.detail || error.message), 'error');
@@ -322,7 +322,7 @@
     }
     
     async function editTask(taskId) {
-        showToast('Task editing feature coming soon! ✏️', 'info');
+        showToast('Task editing feature coming soon.', 'info');
     }
     
     async function bulkComplete() {
@@ -341,7 +341,7 @@
                 await axios.post(`/api/tasks/${taskId}/complete`);
             }
             
-            showToast(`${taskIds.length} tasks completed successfully! 🎉`, 'success');
+            showToast(`${taskIds.length} tasks completed successfully.`, 'success');
             setTimeout(() => location.reload(), 1500);
         } catch (error) {
             showToast('Error completing tasks: ' + (error.response?.data?.detail || error.message), 'error');
@@ -394,7 +394,7 @@
         try {
             await axios.post('/api/tasks', taskData);
             hideCreateTaskModal();
-            showToast('Task created successfully! ✨', 'success');
+            showToast('Task created successfully.', 'success');
             setTimeout(() => location.reload(), 1000);
         } catch (error) {
             showToast('Error creating task: ' + (error.response?.data?.detail || error.message), 'error');

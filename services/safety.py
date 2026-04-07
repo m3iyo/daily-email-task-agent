@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 from typing import Dict, Any
 
 import httpx
@@ -8,6 +9,7 @@ from config import settings
 from db.database import SessionLocal
 
 logger = logging.getLogger(__name__)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 class MonitoringService:
@@ -40,7 +42,11 @@ class MonitoringService:
         # Credentials presence check
         import os
 
-        if os.path.exists(settings.google_credentials_file):
+        credentials_path = Path(settings.google_credentials_file)
+        if not credentials_path.is_absolute():
+            credentials_path = PROJECT_ROOT / credentials_path
+
+        if credentials_path.exists():
             health["checks"]["google_credentials_file"] = "ok"
         else:
             health["checks"]["google_credentials_file"] = "missing"

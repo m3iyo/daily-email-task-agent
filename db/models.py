@@ -1,10 +1,8 @@
 from datetime import datetime
 from enum import Enum
-from sqlalchemy import Column, Integer, String, Text, DateTime, Boolean, Float, JSON
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy import JSON, Boolean, Column, DateTime, Float, Integer, String, Text
 
-Base = declarative_base()
+from db.database import Base
 
 
 class EmailStatus(str, Enum):

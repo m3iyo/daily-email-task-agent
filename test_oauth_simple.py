@@ -11,10 +11,24 @@ from pathlib import Path
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
+def check_python_version():
+    """Ensure the runtime is compatible with the pinned dependencies."""
+    current = sys.version_info[:3]
+    if current < (3, 11):
+        print(f"FAIL: Python 3.11+ required, found {sys.version.split()[0]}")
+        return False
+    if current >= (3, 14):
+        print(f"FAIL: Python 3.14+ is not supported by the pinned SQLAlchemy version, found {sys.version.split()[0]}")
+        return False
+    return True
+
 def test_oauth():
     """Test OAuth authentication with minimal setup"""
     print("Testing Google OAuth authentication")
     print("=" * 45)
+
+    if not check_python_version():
+        return False
     
     # Check credentials file
     if not Path("credentials.json").exists():

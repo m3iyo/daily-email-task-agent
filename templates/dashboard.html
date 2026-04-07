@@ -198,7 +198,7 @@
                                 <p class="text-sm font-semibold text-gray-900 truncate group-hover:text-blue-600 transition-colors">{{ email.subject }}</p>
                                 <div class="flex items-center space-x-2 mt-1">
                                     <p class="text-sm text-gray-600 truncate">{{ email.sender.split('@')[0] if '@' in email.sender else email.sender }}</p>
-                                    <span class="text-gray-400">•</span>
+                                    <span class="text-gray-400">|</span>
                                     <p class="text-xs text-gray-500">{{ email.received_at.strftime('%H:%M') }}</p>
                                 </div>
                                 {% if email.summary %}
@@ -264,11 +264,11 @@
                                 <div class="flex items-center space-x-2 mt-1">
                                     {% if task.due_date %}
                                         <p class="text-xs text-gray-600">Due: {{ task.due_date.strftime('%m/%d') }}</p>
-                                        <span class="text-gray-400">•</span>
+                                        <span class="text-gray-400">|</span>
                                     {% endif %}
                                     <p class="text-xs text-gray-500">{{ task.created_at.strftime('%H:%M') }}</p>
                                     {% if task.email_id %}
-                                        <span class="text-gray-400">•</span>
+                                        <span class="text-gray-400">|</span>
                                         <span class="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded-full">From Email</span>
                                     {% endif %}
                                 </div>

@@ -1,7 +1,7 @@
 import os
-import pickle
 import base64
 from datetime import datetime, timedelta
+from pathlib import Path
 from typing import List, Dict, Any, Optional
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -18,6 +18,7 @@ from db.database import SessionLocal
 import logging
 
 logger = logging.getLogger(__name__)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 # Gmail and Tasks API scopes (shared with Tasks service)
 SCOPES = [
@@ -31,16 +32,21 @@ class GmailService:
     def __init__(self):
         self.service = None
         self.credentials = None
-        self._authenticate()
-    
+
+    def _ensure_service(self):
+        if self.service is None:
+            self._authenticate()
+
     def _authenticate(self):
         """Authenticate with Gmail API using OAuth2"""
         creds = None
+        token_path = self._resolve_path(settings.google_token_file)
+        credentials_path = self._resolve_path(settings.google_credentials_file)
         
         # Load existing credentials
-        if os.path.exists(settings.google_token_file):
+        if token_path.exists():
             try:
-                creds = Credentials.from_authorized_user_file(settings.google_token_file, SCOPES)
+                creds = Credentials.from_authorized_user_file(str(token_path), SCOPES)
             except Exception as e:
                 logger.error(f"Error loading credentials: {e}")
         
@@ -54,24 +60,31 @@ class GmailService:
                     creds = None
             
             if not creds:
-                if not os.path.exists(settings.google_credentials_file):
+                if not credentials_path.exists():
                     raise FileNotFoundError(
-                        f"Google credentials file not found: {settings.google_credentials_file}. "
+                        f"Google credentials file not found: {credentials_path}. "
                         "Please run configure_google.py first."
                     )
                 
                 flow = InstalledAppFlow.from_client_secrets_file(
-                    settings.google_credentials_file, SCOPES
+                    str(credentials_path), SCOPES
                 )
                 creds = flow.run_local_server(port=0)
             
             # Save the credentials for the next run
-            with open(settings.google_token_file, 'w') as token:
+            with open(token_path, 'w', encoding='utf-8') as token:
                 token.write(creds.to_json())
         
         self.credentials = creds
         self.service = build('gmail', 'v1', credentials=creds)
         logger.info("Gmail API authenticated successfully")
+
+    @staticmethod
+    def _resolve_path(path_value: str) -> Path:
+        candidate = Path(path_value)
+        if candidate.is_absolute():
+            return candidate
+        return PROJECT_ROOT / candidate
     
     def get_recent_emails(self, max_results: int = 50, hours_back: int = 24) -> List[Dict[str, Any]]:
         """
@@ -85,18 +98,26 @@ class GmailService:
             List of email dictionaries
         """
         try:
+            self._ensure_service()
+
             # Calculate date filter
             since_date = datetime.now() - timedelta(hours=hours_back)
             date_filter = since_date.strftime('%Y/%m/%d')
             
             # Build query
             query_parts = [f'after:{date_filter}']
-            
+
+            status_filters = []
             if settings.process_unread_only:
-                query_parts.append('is:unread')
-            
+                status_filters.append("is:unread")
+
             if settings.process_starred_emails:
-                query_parts.append('OR is:starred')
+                status_filters.append("is:starred")
+
+            if len(status_filters) == 1:
+                query_parts.append(status_filters[0])
+            elif len(status_filters) > 1:
+                query_parts.append(f"({' OR '.join(status_filters)})")
             
             query = ' '.join(query_parts)
             
@@ -180,20 +201,20 @@ class GmailService:
                     if 'data' in part['body']:
                         body += base64.urlsafe_b64decode(
                             part['body']['data']
-                        ).decode('utf-8')
+                        ).decode('utf-8', errors='replace')
                 elif part['mimeType'] == 'text/html' and not body:
                     # Fallback to HTML if no plain text
                     if 'data' in part['body']:
                         body += base64.urlsafe_b64decode(
                             part['body']['data']
-                        ).decode('utf-8')
+                        ).decode('utf-8', errors='replace')
         else:
             # Single part message
             if payload['mimeType'] in ['text/plain', 'text/html']:
                 if 'data' in payload['body']:
                     body = base64.urlsafe_b64decode(
                         payload['body']['data']
-                    ).decode('utf-8')
+                    ).decode('utf-8', errors='replace')
         
         return body[:5000]  # Limit body length
     
@@ -248,6 +269,7 @@ class GmailService:
     def mark_email_as_read(self, gmail_id: str):
         """Mark email as read in Gmail"""
         try:
+            self._ensure_service()
             self.service.users().messages().modify(
                 userId='me',
                 id=gmail_id,
@@ -259,6 +281,7 @@ class GmailService:
     def send_email(self, to: str, subject: str, body: str, html_body: str = None):
         """Send an email"""
         try:
+            self._ensure_service()
             message = MIMEMultipart('alternative')
             message['to'] = to
             message['subject'] = subject
@@ -289,6 +312,7 @@ class GmailService:
     def get_user_profile(self) -> Dict[str, Any]:
         """Get Gmail user profile information"""
         try:
+            self._ensure_service()
             profile = self.service.users().getProfile(userId='me').execute()
             return {
                 'email': profile.get('emailAddress'),

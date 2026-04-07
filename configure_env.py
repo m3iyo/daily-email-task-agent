@@ -10,7 +10,7 @@ def main() -> int:
     print("Press Enter to keep defaults.")
 
     ollama_base_url = input("OLLAMA_BASE_URL [http://localhost:11434]: ").strip() or "http://localhost:11434"
-    ollama_model = input("OLLAMA_MODEL [qwen3.5:9b]: ").strip() or "qwen3.5:9b"
+    ollama_model = input("OLLAMA_MODEL [qwen2.5:14b]: ").strip() or "qwen2.5:14b"
     google_credentials_file = input("GOOGLE_CREDENTIALS_FILE [credentials.json]: ").strip() or "credentials.json"
     google_token_file = input("GOOGLE_TOKEN_FILE [token.json]: ").strip() or "token.json"
     database_url = input("DATABASE_URL [sqlite:///./data/email_agent.db]: ").strip() or "sqlite:///./data/email_agent.db"

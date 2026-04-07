@@ -10,6 +10,19 @@ project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
 
+def check_python_version() -> bool:
+    print("Testing Python version...")
+    current = sys.version_info[:3]
+    if current < (3, 11):
+        print(f"FAIL: Python 3.11+ required, found {sys.version.split()[0]}")
+        return False
+    if current >= (3, 14):
+        print(f"FAIL: Python 3.14+ is not supported by the pinned SQLAlchemy version, found {sys.version.split()[0]}")
+        return False
+    print("OK: Python version")
+    return True
+
+
 def test_imports() -> bool:
     print("Testing imports...")
     try:
@@ -57,11 +70,15 @@ def test_database() -> bool:
 
 
 def main() -> int:
-    tests = [test_imports, test_ollama, test_database]
+    tests = [check_python_version, test_imports, test_ollama, test_database]
     passed = 0
     for fn in tests:
-        if fn():
+        result = fn()
+        if result:
             passed += 1
+        elif fn is check_python_version:
+            print(f"Result: {passed}/{len(tests)} tests passed")
+            return 1
     print(f"Result: {passed}/{len(tests)} tests passed")
     return 0 if passed == len(tests) else 1
 
