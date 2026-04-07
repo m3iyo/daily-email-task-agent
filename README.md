@@ -35,7 +35,7 @@ Use:
 ## Quick Start (Windows PowerShell)
 
 ```powershell
-cd E:\DOST6\Final\smartgov\email-agent-test
+cd \email-agent-test
 py -3.11 -m venv .venv
 .\.venv\Scripts\activate
 pip install -r requirements.txt
