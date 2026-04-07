@@ -1,6 +1,6 @@
 # Daily Email & Task Automation Agent (Ollama Mode)
 
-This project fetches Gmail emails, analyzes them with a local Ollama model (for example `qwen3.5:9b`), extracts actionable tasks, and syncs them to Google Tasks.
+This project fetches Gmail emails, analyzes them with a local Ollama model (`qwen3.5:9b`), extracts actionable tasks, and syncs them to Google Tasks.
 
 ## Core Flow
 
@@ -60,7 +60,6 @@ Open `http://localhost:8000`.
 
 ## Notes
 
-- `OPENAI_API_KEY` is not used.
 - Model/backend is controlled by `.env`:
   - `OLLAMA_BASE_URL`
   - `OLLAMA_MODEL`
