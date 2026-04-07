@@ -18,6 +18,8 @@ def main() -> int:
     unread_only = input("PROCESS_UNREAD_ONLY [true]: ").strip() or "true"
     starred = input("PROCESS_STARRED_EMAILS [true]: ").strip() or "true"
     schedule = input("EMAIL_PROCESSING_SCHEDULE [8:00]: ").strip() or "8:00"
+    enable_scheduler = input("ENABLE_SCHEDULER [true]: ").strip() or "true"
+    enable_ui = input("ENABLE_UI [true]: ").strip() or "true"
 
     content = f"""OLLAMA_BASE_URL={ollama_base_url}
 OLLAMA_MODEL={ollama_model}
@@ -35,6 +37,8 @@ PROCESS_STARRED_EMAILS={starred}
 DEFAULT_TASK_LIST_NAME=My Tasks
 
 DEBUG=true
+ENABLE_SCHEDULER={enable_scheduler}
+ENABLE_UI={enable_ui}
 LOG_LEVEL=INFO
 MAX_DAILY_PROCESSING=100
 EMAIL_PROCESSING_SCHEDULE={schedule}

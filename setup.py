@@ -25,6 +25,8 @@ def main() -> int:
                     "PROCESS_STARRED_EMAILS=true",
                     "DEFAULT_TASK_LIST_NAME=My Tasks",
                     "DEBUG=true",
+                    "ENABLE_SCHEDULER=true",
+                    "ENABLE_UI=true",
                     "LOG_LEVEL=INFO",
                     "MAX_DAILY_PROCESSING=100",
                     "EMAIL_PROCESSING_SCHEDULE=8:00",

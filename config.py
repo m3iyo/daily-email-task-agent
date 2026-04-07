@@ -33,11 +33,20 @@ class Settings(BaseSettings):
 
     # Application Settings
     debug: bool = True
+    enable_scheduler: bool = True
+    enable_ui: bool = True
     log_level: str = "INFO"
     max_daily_processing: int = 100
     email_processing_schedule: str = "8:00"  # 8 AM daily
 
-    @field_validator("debug", "process_unread_only", "process_starred_emails", mode="before")
+    @field_validator(
+        "debug",
+        "enable_scheduler",
+        "enable_ui",
+        "process_unread_only",
+        "process_starred_emails",
+        mode="before",
+    )
     @classmethod
     def parse_bool_like(cls, value):
         if isinstance(value, bool):
