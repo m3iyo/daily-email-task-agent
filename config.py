@@ -4,8 +4,10 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    # OpenAI Configuration
-    openai_api_key: str = ""
+    # Local Ollama Configuration
+    ollama_base_url: str = "http://localhost:11434"
+    ollama_model: str = "qwen3.5:9b"
+    ollama_timeout_seconds: int = 120
 
     # Google APIs Configuration
     google_credentials_file: str = "credentials.json"

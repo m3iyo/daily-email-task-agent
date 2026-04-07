@@ -11,7 +11,7 @@ from pathlib import Path
 
 def check_git_status():
     """Check if confidential files appear in git status"""
-    print("🔍 Checking Git status for confidential files...")
+    print("Checking Git status for confidential files...")
     
     confidential_files = [
         '.env',
@@ -39,29 +39,29 @@ def check_git_status():
                     found_confidential.append(filename)
         
         if found_confidential:
-            print("❌ SECURITY RISK: Confidential files found in git status:")
+            print("SECURITY RISK: Confidential files found in git status:")
             for file in found_confidential:
                 print(f"   - {file}")
-            print("\n💡 These files should be added to .gitignore")
+            print("\nThese files should be added to .gitignore")
             return False
         else:
-            print("✅ No confidential files found in git status")
+            print("OK: No confidential files found in git status")
             return True
             
     except subprocess.CalledProcessError:
-        print("⚠️  Not a git repository or git not available")
+        print("WARN: Not a git repository or git not available")
         return True
     except FileNotFoundError:
-        print("⚠️  Git not found in PATH")
+        print("WARN: Git not found in PATH")
         return True
 
 def check_gitignore():
     """Check if .gitignore exists and contains confidential files"""
-    print("\n🔍 Checking .gitignore file...")
+    print("\nChecking .gitignore file...")
     
     gitignore_path = Path('.gitignore')
     if not gitignore_path.exists():
-        print("❌ .gitignore file not found!")
+        print("FAIL: .gitignore file not found")
         return False
     
     with open(gitignore_path, 'r') as f:
@@ -80,17 +80,17 @@ def check_gitignore():
             missing_patterns.append(pattern)
     
     if missing_patterns:
-        print("⚠️  Missing patterns in .gitignore:")
+        print("WARN: Missing patterns in .gitignore:")
         for pattern in missing_patterns:
             print(f"   - {pattern}")
         return False
     else:
-        print("✅ .gitignore contains required confidential file patterns")
+        print("OK: .gitignore contains required confidential file patterns")
         return True
 
 def check_file_existence():
     """Check if confidential files exist"""
-    print("\n🔍 Checking for confidential files...")
+    print("\nChecking for confidential files...")
     
     files_to_check = {
         '.env': 'Environment variables',
@@ -102,16 +102,16 @@ def check_file_existence():
     
     for filename, description in files_to_check.items():
         if Path(filename).exists():
-            print(f"✅ {filename} - {description}")
+            print(f"OK: {filename} - {description}")
         else:
             if filename.endswith('.example'):
-                print(f"⚠️  {filename} - {description} (template missing)")
+                print(f"WARN: {filename} - {description} (template missing)")
             else:
-                print(f"❌ {filename} - {description} (required file missing)")
+                print(f"FAIL: {filename} - {description} (required file missing)")
 
 def main():
     """Main security check function"""
-    print("🔐 Git Security Check for Daily Email & Task Agent")
+    print("Git Security Check for Daily Email & Task Agent")
     print("=" * 55)
     
     os.chdir(Path(__file__).parent)
@@ -122,11 +122,11 @@ def main():
     
     print("\n" + "=" * 55)
     if gitignore_ok and git_status_ok:
-        print("🎉 Security check PASSED! Safe to commit to Git.")
+        print("Security check PASSED. Safe to commit to Git.")
         sys.exit(0)
     else:
-        print("⚠️  Security check FAILED! Fix issues before committing.")
-        print("\n📋 Next steps:")
+        print("Security check FAILED. Fix issues before committing.")
+        print("\nNext steps:")
         print("1. Review and update .gitignore file")
         print("2. Remove any confidential files from git tracking")
         print("3. Run this script again to verify")

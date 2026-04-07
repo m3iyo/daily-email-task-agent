@@ -278,17 +278,17 @@ class EmailProcessingScheduler:
         # Placeholder for notification system
         # In production, integrate with email, Slack, etc.
         notification_text = f"""
-        📧 Daily Email Processing Complete
+        Daily Email Processing Complete
         
-        📊 Summary:
-        • Emails processed: {processing_results.get('processed', 0)}
-        • Tasks created: {processing_results.get('tasks_created', 0)}
-        • Total cost: ${processing_results.get('total_cost', 0):.4f}
+        Summary:
+        - Emails processed: {processing_results.get('processed', 0)}
+        - Tasks created: {processing_results.get('tasks_created', 0)}
+        - Total cost: ${processing_results.get('total_cost', 0):.4f}
         
-        📝 AI Summary:
+        AI Summary:
         {summary_data.get('summary', 'No summary available')}
         
-        🔗 View details: http://localhost:8000
+        View details: http://localhost:8000
         """
         
         logger.info(f"Daily notification: {notification_text}")

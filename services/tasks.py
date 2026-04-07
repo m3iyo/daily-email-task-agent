@@ -62,7 +62,7 @@ class GoogleTasksService:
         
         self.credentials = creds
         self.service = build('tasks', 'v1', credentials=creds)
-        logger.info("✅ Google Tasks API authentication successful")
+        logger.info("Google Tasks API authentication successful")
     
     def _get_default_task_list(self):
         """Get or create default task list"""
@@ -374,8 +374,8 @@ class GoogleTasksService:
         """Test Google Tasks API connection"""
         try:
             task_lists = self.service.tasklists().list().execute()
-            logger.info(f"✅ Google Tasks connection successful. Found {len(task_lists.get('items', []))} task lists")
+            logger.info(f"Google Tasks connection successful. Found {len(task_lists.get('items', []))} task lists")
             return True
         except Exception as e:
-            logger.error(f"❌ Google Tasks connection failed: {e}")
+            logger.error(f"Google Tasks connection failed: {e}")
             return False

@@ -13,7 +13,7 @@ sys.path.insert(0, str(project_root))
 
 def test_gmail_connection():
     """Test Gmail API connection"""
-    print("📧 Testing Gmail API connection...")
+    print("Testing Gmail API connection...")
     
     try:
         from services.gmail import GmailService
@@ -21,24 +21,24 @@ def test_gmail_connection():
         gmail_service = GmailService()
         
         if gmail_service.test_connection():
-            print("✅ Gmail API connection successful!")
+            print("OK: Gmail API connection successful")
             
             # Try fetching a few emails
             emails = gmail_service.get_recent_emails(max_results=5, hours_back=24)
-            print(f"✅ Found {len(emails)} recent emails")
+            print(f"OK: Found {len(emails)} recent emails")
             
             return True
         else:
-            print("❌ Gmail API connection failed")
+            print("FAIL: Gmail API connection failed")
             return False
             
     except Exception as e:
-        print(f"❌ Gmail API error: {e}")
+        print(f"FAIL: Gmail API error: {e}")
         return False
 
 def test_tasks_connection():
     """Test Google Tasks API connection"""
-    print("📋 Testing Google Tasks API connection...")
+    print("Testing Google Tasks API connection...")
     
     try:
         from services.tasks import GoogleTasksService
@@ -46,7 +46,7 @@ def test_tasks_connection():
         tasks_service = GoogleTasksService()
         
         if tasks_service.test_connection():
-            print("✅ Google Tasks API connection successful!")
+            print("OK: Google Tasks API connection successful")
             
             # Try creating a test task
             test_task_id = tasks_service.create_task(
@@ -55,47 +55,47 @@ def test_tasks_connection():
             )
             
             if test_task_id:
-                print("✅ Successfully created test task")
+                print("OK: Successfully created test task")
                 
                 # Clean up - delete the test task
                 tasks_service.delete_task(test_task_id)
-                print("✅ Cleaned up test task")
+                print("OK: Cleaned up test task")
             
             return True
         else:
-            print("❌ Google Tasks API connection failed")
+            print("FAIL: Google Tasks API connection failed")
             return False
             
     except Exception as e:
-        print(f"❌ Google Tasks API error: {e}")
+        print(f"FAIL: Google Tasks API error: {e}")
         return False
 
 def test_email_processing():
     """Test email processing pipeline"""
-    print("🤖 Testing email processing pipeline...")
+    print("Testing email processing pipeline...")
     
     try:
         from services.email_processor import EmailProcessor
         
         processor = EmailProcessor()
-        print("✅ Email processor initialized")
+        print("OK: Email processor initialized")
         
         # Test processing would require actual emails
         # For now, just verify it can be instantiated
         return True
         
     except Exception as e:
-        print(f"❌ Email processor error: {e}")
+        print(f"FAIL: Email processor error: {e}")
         return False
 
 def main():
     """Main test function"""
-    print("🧪 Testing Google APIs for Email & Task Agent")
+    print("Testing Google APIs for Email & Task Agent")
     print("=" * 50)
     
     # Check if credentials file exists
     if not Path("credentials.json").exists():
-        print("❌ credentials.json not found!")
+        print("FAIL: credentials.json not found")
         print("Please run: python configure_google.py")
         return 1
     
@@ -109,29 +109,29 @@ def main():
     failed = 0
     
     for test_name, test_func in tests:
-        print(f"\n🔍 Running {test_name} test...")
+        print(f"\nRunning {test_name} test...")
         try:
             if test_func():
                 passed += 1
-                print(f"✅ {test_name} test PASSED")
+                print(f"OK: {test_name} test PASSED")
             else:
                 failed += 1
-                print(f"❌ {test_name} test FAILED")
+                print(f"FAIL: {test_name} test FAILED")
         except Exception as e:
             failed += 1
-            print(f"❌ {test_name} test FAILED with exception: {e}")
+            print(f"FAIL: {test_name} test FAILED with exception: {e}")
     
     print("\n" + "=" * 50)
-    print(f"🧪 Test Results: {passed} passed, {failed} failed")
+    print(f"Test results: {passed} passed, {failed} failed")
     
     if failed == 0:
-        print("🎉 All tests passed! Your Google APIs are ready.")
+        print("All tests passed. Google APIs are ready.")
         print("\nNext steps:")
-        print("1. Configure your OpenAI API key")
+        print("1. Ensure Ollama is running and model is pulled")
         print("2. Run: python run.py")
         print("3. Open: http://localhost:8000")
     else:
-        print("⚠️  Some tests failed. Please check the errors above.")
+        print("Some tests failed. Check the errors above.")
         if "credentials.json" in str(failed):
             print("Run: python configure_google.py for setup help")
         return 1
